@@ -1,4 +1,4 @@
-const LESS_VARIABLES  = require('./src/common/styles/variable-less.js');
+const LESS_VARIABLES = require('./src/common/styles/variable-less.js');
 const {
   override,
   fixBabelImports,
@@ -9,27 +9,31 @@ const {
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-
 const addCustomize = () => config => {
+  console.log(config.entry)
+  console.log(config.entry instanceof Array)
+  console.log(typeof config.entry)
   if (process.env.NODE_ENV === 'production') {
-    config.devtool = false; //去掉map文件
+    config.devtool = false; //delete map files in production mode.
     if (config.plugins) {
-      config.plugins.push(new BundleAnalyzerPlugin());
+      config.plugins.push(new BundleAnalyzerPlugin());//detecting file size in production mode.
     }
     const splitChunksConfig = config.optimization.splitChunks;
-     if (config.entry && config.entry instanceof Array) {
-       config.entry = {
-         main: config.entry,
-         vendor: ["react", "react-dom", "react-router-dom", "react-redux", "redux", 'react-router-config',
-           "lodash", "moment", 'react-intl', 'react-addons-pure-render-mixin', 'redux-promise-middleware', "react-router", 
-         ]
-       }
-     } else if (config.entry && typeof config.entry === 'object') {
-       config.entry.vendor = ["react", "react-dom", "react-router-dom", "react-redux", "redux", 'react-router-config', 
-          "lodash", "moment", 'react-intl', 'react-addons-pure-render-mixin', 'redux-promise-middleware', "react-router", 
-       ];
-     }
- 
+    if (config.entry && config.entry instanceof Array) { //What is this 'if' for?
+      config.entry = {
+        main: config.entry,
+        //这里要删除下面的vendor, 否则npm run build 报错 'path undefined'
+        // vendor: ["react", "react-dom", "react-router-dom", "react-redux", "redux", 'react-router-config',
+        //   "lodash", "moment", 'react-intl', 'react-addons-pure-render-mixin', 'redux-promise-middleware', "react-router",
+        // ]
+      }
+    } else if (config.entry && typeof config.entry === 'object') {
+      config.entry.vendor = ["react", "react-dom", "react-router-dom", "react-redux", "redux", 'react-router-config',
+        "lodash", "moment", 'react-intl', 'react-addons-pure-render-mixin', 'redux-promise-middleware', "react-router",
+      ];
+    }
+    
+
     Object.assign(splitChunksConfig, {
       chunks: 'all',
       cacheGroups: {
@@ -57,16 +61,13 @@ module.exports = override(
   }),
   addLessLoader({
     javascriptEnabled: true,
-    modifyVars: { 
+    modifyVars: {
       // "@icon-url": `${path.resolve(__dirname,'build/assets/font/iconfont')}`, //使用本地字体文件
       ...LESS_VARIABLES
     },
   }),
   addWebpackAlias({
     '@': path.resolve(__dirname, 'src')
-    // ["mock"]: path.resolve(__dirname, "src/mock"),
-    // ["containers"]: path.resolve(__dirname, "src/containers"),
-    // ["components"]: path.resolve(__dirname, "src/components")
   }),
   addDecoratorsLegacy(),
   addCustomize()

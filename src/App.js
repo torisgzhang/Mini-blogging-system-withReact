@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <Button className="btn" type="primary">测试</Button>
+          <Button className="btn" type="primary">a5sdf1a6df16as5df41</Button>
         </header>
       </div>
     )
