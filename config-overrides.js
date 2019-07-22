@@ -1,3 +1,4 @@
+const LESS_VARIABLES  = require('./src/common/styles/variable-less.js');
 const {
   override,
   fixBabelImports,
@@ -58,7 +59,7 @@ module.exports = override(
     javascriptEnabled: true,
     modifyVars: { 
       // "@icon-url": `${path.resolve(__dirname,'build/assets/font/iconfont')}`, //使用本地字体文件
-      '@primary-color': '#1DA57A'
+      ...LESS_VARIABLES
     },
   }),
   addWebpackAlias({
