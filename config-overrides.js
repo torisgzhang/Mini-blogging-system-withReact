@@ -10,9 +10,6 @@ const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const addCustomize = () => config => {
-  console.log(config.entry)
-  console.log(config.entry instanceof Array)
-  console.log(typeof config.entry)
   if (process.env.NODE_ENV === 'production') {
     config.devtool = false; //delete map files in production mode.
     if (config.plugins) {
