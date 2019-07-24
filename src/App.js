@@ -1,85 +1,83 @@
 import React, { Component } from 'react';
-import { Button, Input } from 'antd';
-import TodoItem from "./TodoItem"
-import axios from 'axios';
+import {Button, Input, List} from 'antd';
+import store from './store/index';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      inputVal: '',
-      lists: []
-    }
-    this.handleChangeVal = this.handleChangeVal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.state = store.getState();
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleStoreChange = this.handleStoreChange.bind(this);
+    this.handleClickBtn = this.handleClickBtn.bind(this);
+    this.handleRemoveItem = this.handleRemoveItem.bind(this);
+    this.handleToggleList = this.handleToggleList.bind(this);
+    store.subscribe(this.handleStoreChange);
   }
 
+
   render() {
-    const styleWrapper = {
-      'width': '300px',
-      'height': '300px',
-      'margin': '0 auto',
-    }
     return (
-      <div className="wrapper" style={styleWrapper}>
+      <div style={{margin: 10}}>
+        <Input 
+          style={{width: 300, marginRight: 10}}
+          placeholder="todo info"
+          value={this.state.inputValue}
+          onChange={this.handleInputChange}
+        />
+        <Button onClick={this.handleClickBtn} type="primary">提交</Button>
         <div>
-          <Input
-            value={this.state.inputVal}
-            onChange={this.handleChangeVal}
-            placeholder="small size"
-          />
-          <Button onClick={this.handleClick} className="btn" type="">submit</Button>
+          <Button onClick={() => this.handleToggleList('all')} style={{margin: 10, marginLeft: 0}} type="">全部</Button>
+          <Button onClick={() => this.handleToggleList('un-completed')} style={{margin: 10}} type="">未完成</Button>
+          <Button onClick={() => this.handleToggleList('completed')} style={{margin: 10}} type="">已完成</Button>
         </div>
-        <div>
-        <ul>
-          {this.getItemList()}
-        </ul>
-        </div>
+        <List
+          style={{width: 300}}
+          bordered
+          dataSource={this.state.list}
+          renderItem={(item, index) => (
+            <List.Item
+              onClick={() => this.handleRemoveItem(index)}
+            >
+              {item.text}
+            </List.Item>
+          )}
+        />
+        
       </div>
     )
   }
-  componentDidMount() {
-    //ajax请求数据
-    axios.get('http://www.mugooo.com/userpcapi/PCIndexController/region/list')
-      .then((res) => {
-        alert('成功')
-      })
-      .catch((e) => {
-        alert("失败" + e)
-      });
-  }
 
-  getItemList() {
-    return this.state.lists.map((item, index) => {
-      return (
-        <TodoItem
-          key={index}
-          item = {item}
-          index = {index}
-          deleteItem = {this.handleDelete}
-        />
-      )
-    })
+  handleInputChange(e) {
+    const action = {
+      type: 'change_input_value',
+      value: e.target.value
+    };
+    store.dispatch(action);
   }
-  handleClick() {
-    this.setState((preState) => ({
-      lists: [...preState.lists, preState.inputVal],
-      inputVal: ''
-    }))
+  handleClickBtn() {
+    const action = {
+      type: 'submit_value',
+      value: this.state.inputValue,
+      completed: false
+    }
+    store.dispatch(action);
   }
-  handleChangeVal(e) {
-    const inputVal = e.target.value;
-    this.setState(() => ({
-      inputVal
-    }))
+  handleStoreChange() {
+    this.setState(store.getState());
   }
-  handleDelete(index) {
-    this.setState((preState) => {
-      const lists = [...preState.lists];
-      lists.splice(index, 1);
-      return { lists }
-    })
+  handleRemoveItem(index) {
+    const action = {
+      type: 'remove_item',
+      index: index
+    }
+    store.dispatch(action);
+  }
+  handleToggleList(type) {
+    let action = {
+      type: 'toggle_item',
+      style: type
+    };
+    store.dispatch(action);
   }
 }
 
