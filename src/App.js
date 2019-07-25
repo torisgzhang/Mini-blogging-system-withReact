@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {Button, Input, List} from 'antd';
 import store from './store/index';
+import axios from 'axios';
+import { getChangeInputValue, getSubmitValue, getRemoveItem, getHandleToggleItem } from '@/store/actionCreators'
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +16,7 @@ class App extends Component {
     store.subscribe(this.handleStoreChange);
   }
 
-
+  //组件里只有render（）的时候就是无状态组件  是一个函数
   render() {
     return (
       <div style={{margin: 10}}>
@@ -47,37 +49,31 @@ class App extends Component {
     )
   }
 
+  componentDidMount() {
+    //异步请求
+    // axios.get('')
+    // .then((res) => {
+    //   if(res.code == 200) {
+
+    //   }
+    // })
+    // .catch();
+  }
+
   handleInputChange(e) {
-    const action = {
-      type: 'change_input_value',
-      value: e.target.value
-    };
-    store.dispatch(action);
+    store.dispatch(getChangeInputValue(e.target.value));
   }
   handleClickBtn() {
-    const action = {
-      type: 'submit_value',
-      value: this.state.inputValue,
-      completed: false
-    }
-    store.dispatch(action);
+    store.dispatch(getSubmitValue(this.state.inputValue, false));
   }
   handleStoreChange() {
     this.setState(store.getState());
   }
   handleRemoveItem(index) {
-    const action = {
-      type: 'remove_item',
-      index: index
-    }
-    store.dispatch(action);
+    store.dispatch(getRemoveItem(index));
   }
   handleToggleList(type) {
-    let action = {
-      type: 'toggle_item',
-      style: type
-    };
-    store.dispatch(action);
+    store.dispatch(getHandleToggleItem(type));
   }
 }
 
