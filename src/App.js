@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Button, Input, List} from 'antd';
 import store from './store/index';
-import axios from 'axios';
-import { getChangeInputValue, getSubmitValue, getRemoveItem, getHandleToggleItem, initData } from '@/store/actionCreators'
+
+import { getChangeInputValue, getSubmitValue, getRemoveItem, getHandleToggleItem, getListData } from '@/store/actionCreators'
 
 class App extends Component {
   constructor(props) {
@@ -50,12 +50,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.0.101:3737/list').then((res) => {
-      if(res.status === 200) {
-        const data = res.data;
-        store.dispatch(initData(data));
-      }
-    })
+    const action = getListData();
+    store.dispatch(action);//执行action里面的函数
   }
 
   handleInputChange(e) {
