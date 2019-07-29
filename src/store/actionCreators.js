@@ -2,7 +2,8 @@ import {
   CHANGE_INPUT_VALUE,
   SUBMIT_VALUE,
   REMOVE_ITEM,
-  TOGGLE_ITEM
+  TOGGLE_ITEM,
+  INIT_DATA
 } from './actionTypes';
 
 export const getChangeInputValue = ((value) => ({
@@ -24,4 +25,9 @@ export const getRemoveItem = ((index) => ({
 export const getHandleToggleItem = ((style) => ({
   type: TOGGLE_ITEM,
   style
+}));
+
+export const initData = ((data) => ({
+  type: INIT_DATA,
+  data
 }));

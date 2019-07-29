@@ -2,24 +2,14 @@ import {
   CHANGE_INPUT_VALUE,
   SUBMIT_VALUE,
   REMOVE_ITEM,
-  TOGGLE_ITEM
+  TOGGLE_ITEM,
+  INIT_DATA
 } from './actionTypes';
-import { combineReducers } from 'redux';
 
 const defaultState = {
-  inputValue: "默认值",
-  list: [{
-    text: '11111',
-    completed: true
-  }, {
-    text: '22222',
-    completed: false
-  }, {
-    text: '33333',
-    completed: true
-  }]
+  inputValue: "",
+  list: []
 }
-
 
 const toDoListReducer = (state = defaultState, action) => {
   if(action.type === CHANGE_INPUT_VALUE) {
@@ -56,18 +46,12 @@ const toDoListReducer = (state = defaultState, action) => {
         break;
     }
   }
-  return state;
-}
-
-const filterReducer = (state = {}, action) => {
-  if(action.type === TOGGLE_ITEM) {
-    
+  if(action.type === INIT_DATA) {
+    const newState = JSON.parse(JSON.stringify(state));
+    newState.list = [...action.data];
+    return newState;
   }
   return state;
 }
 
-var rootReducer = combineReducers({
-  toDoListReducer,
-  filterReducer
-});
 export default toDoListReducer;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Button, Input, List} from 'antd';
 import store from './store/index';
 import axios from 'axios';
-import { getChangeInputValue, getSubmitValue, getRemoveItem, getHandleToggleItem } from '@/store/actionCreators'
+import { getChangeInputValue, getSubmitValue, getRemoveItem, getHandleToggleItem, initData } from '@/store/actionCreators'
 
 class App extends Component {
   constructor(props) {
@@ -50,14 +50,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    //异步请求
-    // axios.get('')
-    // .then((res) => {
-    //   if(res.code == 200) {
-
-    //   }
-    // })
-    // .catch();
+    axios.get('http://192.168.0.101:3737/list').then((res) => {
+      if(res.status === 200) {
+        const data = res.data;
+        store.dispatch(initData(data));
+      }
+    })
   }
 
   handleInputChange(e) {

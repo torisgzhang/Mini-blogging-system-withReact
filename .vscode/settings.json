@@ -1,3 +1,5 @@
 {
-  "emmet.triggerExpansionOnTab": true
+  "emmet.triggerExpansionOnTab": true,
+  "editor.lineHeight": 20,
+  "terminal.integrated.lineHeight": 0
 }
